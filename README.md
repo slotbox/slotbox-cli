@@ -14,7 +14,7 @@ It has exactly the same usage as the [Heroku CLi client](https://devcenter.herok
 
 `slotbox deploy`
 
-Slotbox enforces the use of Github repos to ensure that funders can always scrutinise the code in which they are investing. Therefore deployment
+Slotbox enforces the use of public Github repos to ensure that funders can always scrutinise the code in which they are investing. Therefore deployment
 is done by the Slotbox API rather a `git push`.
 
 ## Unsupported commands

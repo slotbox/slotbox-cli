@@ -34,11 +34,13 @@ if ! which "heroku"
   exit 1
 end
 
-unsupported = %w[addons certs db drains keys labs pg pgbackups ssl stack]
+require 'slotbox'
 
-if unsupported.select{ |c| ARGV.first.start_with? c }.length > 0
-  $stderr.puts " ! Slotbox does not currently support this command."
-  exit 1
+if ARGV.length > 0
+  if Slotbox::UNSUPPORTED_COMMANDS.select{ |c| ARGV.first.start_with? c }.length > 0
+    $stderr.puts " ! Slotbox does not currently support this command."
+    exit 1
+  end
 end
 
 slotbox_host = ENV["SLOTBOX_HOST"] || "slotbox.es"
