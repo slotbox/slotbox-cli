@@ -1,2 +1,4 @@
-require "heroku/command/deploy"
-require "heroku/api/deploying"
+Dir['plugin/lib/slotbox/**/*.rb'].each do |file|
+  file.gsub!("plugin/lib/", "")
+  require file
+end

@@ -1,15 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-slotbox_host=${SLOTBOX_HOST:-slotbox.es}
+unsupported = %w[addons certs db drains keys labs pg pgbackups ssl stack]
 
-export HEROKU_HOST=${HEROKU_HOST:-http://$slotbox_host:5000/}
-export HEROKU_STATUS_HOST=${HEROKU_STATUS_HOST:-"$slotbox_host"}
+if unsupported.select{ |c| ARGV.first.start_with? c }.length > 0
+  $stderr.puts " ! Slotbox does not currently support this command."
+  exit 1
+end
+
+slotbox_host = ENV["SLOTBOX_HOST"] || "slotbox.es"
+
+system <<-EOF
+
+export HEROKU_HOST=${HEROKU_HOST:-http://#{slotbox_host}:5000/}
+export HEROKU_STATUS_HOST=${HEROKU_STATUS_HOST:-"#{slotbox_host}"}
 export HEROKU_SSL_VERIFY=${HEROKU_SSL_VERIFY:-"disable"}
 
-if grep -q "^create$\|^apps:create$" <<<$1; then
-  # TODO git config --add slotbox.app hello
-  # Don't create a git remote and don't return any info about there being a git remote
-  exec heroku $* --no-remote | sed -e 's/| git@.*//'
-else
-  exec heroku $*
-fi
+exec heroku #{ARGV.join(" ")}
+
+EOF

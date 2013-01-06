@@ -38,7 +38,7 @@ module Heroku::Command
             :rendezvous_url => rendezvous_url,
             :connect_timeout => (ENV["HEROKU_CONNECT_TIMEOUT"] || 120).to_i,
             :activity_timeout => nil,
-            :input => $stdin,
+            :input => nil,
             :output => $stdout)
           rendezvous.on_connect(&on_connect)
           rendezvous.start
