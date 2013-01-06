@@ -1,5 +1,39 @@
 #!/usr/bin/env ruby
 
+# Cross-platform way of finding an executable in the $PATH.
+#
+#   which('ruby') #=> /usr/bin/ruby
+def which(cmd)
+  exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+  ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+    exts.each { |ext|
+      exe = "#{path}/#{cmd}#{ext}"
+      return exe if File.executable? exe
+    }
+  end
+  return nil
+end
+
+# Install the Heroku Toolbelt
+if ! which "heroku"
+  puts "The Heroku Toolbelt isn't installed on your system."
+  if RUBY_PLATFORM =~ /linux/
+    puts "Would you like to install it now? (y/n)"
+    begin
+      system("stty raw -echo")
+      answer = STDIN.getc
+    ensure
+      system("stty -raw echo")
+    end
+    if ['y', 'yes'].include? answer
+      system "wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh"
+    end
+  else
+    puts "Please visit https://toolbelt.heroku.com/ to install"
+  end
+  exit 1
+end
+
 unsupported = %w[addons certs db drains keys labs pg pgbackups ssl stack]
 
 if unsupported.select{ |c| ARGV.first.start_with? c }.length > 0
