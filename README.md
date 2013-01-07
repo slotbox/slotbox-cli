@@ -1,4 +1,4 @@
-slotbox-cli
+Slotbox CLI
 ===========
 
 Command line tool for interacting with Slotbox.
