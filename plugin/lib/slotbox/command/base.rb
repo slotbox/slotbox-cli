@@ -1,10 +1,3 @@
-# Here we formalise the naming of Slotbox apps.
-#
-# Names consist of the Github user and the repo name, so;
-# git@github.com:slotbox/nodejs-hello-world.git becomes
-# => slotbox-nodejs-hello-world
-# Errors are thrown if there is not a github.com remote on the local repo.
-
 require "addressable/uri"
 
 class Heroku::Command::Base
@@ -51,29 +44,11 @@ class Heroku::Command::Base
     end
 
     def extract_app_name_from_remote remote
+      if !(remote =~ "github.com")
+        raise(Heroku::Command::CommandFailed, "You must have a git remote hosted on github.com")
+      end
       path = Addressable::URI.parse(remote).path.gsub(/\.git$/, '').split('/')
       "#{path[-2]}-#{path[-1]}"
-    end
-
-    def git_remotes(base_dir=Dir.pwd)
-      remotes = {}
-      original_dir = Dir.pwd
-      Dir.chdir(base_dir)
-
-      return unless File.exists?(".git")
-      git("remote -v").split("\n").each do |remote|
-        name, url, method = remote.split(/\s/)
-        if url =~ /github\.com/
-          remotes[name] = url
-        end
-      end
-
-      Dir.chdir(original_dir)
-      if remotes.empty?
-        raise(Heroku::Command::CommandFailed, "You must have a git remote hosted on github.com")
-      else
-        remotes
-      end
     end
 
 end

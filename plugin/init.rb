@@ -1,6 +1,9 @@
-require 'slotbox'
+if ENV['HEROKU_HOST'] =~ /slotbox/
 
-Dir[File.dirname(__FILE__) + '/lib/slotbox/**/*.rb'].each do |file|
-  file.gsub!("plugin/lib/", "")
-  require file
+  require 'slotbox'
+
+  Dir[ File.dirname(__FILE__) + '/lib/slotbox/**/*.rb'].each do |file|
+    require file
+  end
+
 end
