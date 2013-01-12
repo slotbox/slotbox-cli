@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'slotbox'
+
 # Cross-platform way of finding an executable in the $PATH.
 #
 #   which('ruby') #=> /usr/bin/ruby
@@ -34,7 +36,15 @@ if ! which "heroku"
   exit 1
 end
 
-require 'slotbox'
+# Make sure the Heroku-Slotbox plugin is installed
+if !File.exists? Slotbox::PLUGIN_DIR + "/init.rb"
+  puts "Installing Slotbox-Heroku plugin..."
+  require 'rubygems'
+  spec = Gem::Specification.find_by_name("slotbox")
+  system "mkdir -p #{Slotbox::PLUGIN_DIR}"
+  system "cp -rf #{spec.gem_dir}/plugin/* #{Slotbox::PLUGIN_DIR}"
+  puts "Slotbox-Heroku plugin installed. It will automatically be removed when you uninstall this gem."
+end
 
 if ARGV.length > 0
   if Slotbox::UNSUPPORTED_COMMANDS.select{ |c| ARGV.first.start_with? c }.length > 0
