@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name    = "slotbox"
-  gem.version = "0.0.1"
+  gem.version = "0.0.2"
 
   gem.author      = "Tom BUckley-Houston"
   gem.email       = "tom@tombh.co.uk"
